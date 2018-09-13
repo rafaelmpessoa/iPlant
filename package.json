@@ -18,5 +18,11 @@
   "homepage": "https://github.com/rafaelmpessoa/iPlant-api#readme",
   "devDependencies": {
     "nodemon": "^1.18.4"
+  },
+  "dependencies": {
+    "config": "^2.0.1",
+    "express": "^4.16.3",
+    "jsonwebtoken": "^8.3.0",
+    "mongoose": "^5.2.14"
   }
 }

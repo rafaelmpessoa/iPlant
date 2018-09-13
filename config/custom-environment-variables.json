@@ -1,0 +1,7 @@
+{
+    "database":{
+        "username": "DB_USERNAME",
+        "password": "DB_PASSWORD"
+    },
+    "jwToken": "iplant_privateKey"
+}
