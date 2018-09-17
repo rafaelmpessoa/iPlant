@@ -3,5 +3,9 @@
         "username": "",
         "password": ""
     },
-    "jwToken": ""
+    "jwToken": "",
+    "email" : {
+        "username": "",
+        "password": ""
+    }
 }

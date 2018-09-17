@@ -9,6 +9,13 @@ if(!config.get('jwToken')){
 }
 
 server() // Iniciar o servidor
-db() // Conectar com o bando de dados
 
 
+async function connectDB(){
+    await db()
+    
+} 
+
+
+
+connectDB()

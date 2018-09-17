@@ -3,5 +3,9 @@
         "username": "DB_USERNAME",
         "password": "DB_PASSWORD"
     },
-    "jwToken": "iplant_privateKey"
+    "jwToken": "iplant_privateKey",
+    "email" : {
+        "username": "EMAIL_USERNAME",
+        "password": "EMAIL_PASSWORD"
+    }
 }
