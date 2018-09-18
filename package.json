@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "set iplant_privateKey=123456 && set DB_USERNAME=rafael&& set DB_PASSWORD=rafa1103&& set EMAIL_USERNAME=iplantsuporte@gmail.com&& set EMAIL_PASSWORD=rafa1103&& nodemon index.js"
+    "start": "set iplant_privateKey=123456 && set DB_USERNAME=rafael&& set DB_PASSWORD=rafa1103&& set clientSecret=2oqca1woDIZS1LvHndst5Art&& nodemon index.js"
   },
   "repository": {
     "type": "git",
@@ -29,6 +29,7 @@
     "jsonwebtoken": "^8.3.0",
     "lodash": "^4.17.11",
     "mongoose": "^5.2.14",
-    "nodemailer": "^4.6.8"
+    "nodemailer": "^4.6.8",
+    "rand-token": "^0.4.0"
   }
 }

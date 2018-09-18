@@ -4,8 +4,7 @@
         "password": ""
     },
     "jwToken": "",
-    "email" : {
-        "username": "",
-        "password": ""
+    "oauth2" : {
+        "clientSecret": ""
     }
 }
