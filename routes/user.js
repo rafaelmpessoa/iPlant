@@ -14,8 +14,6 @@ router.get('/:id', auth , async (req,res)=>{
     res.status(200).send(user)
 })
 
-
-
 router.get('/', [auth,admin], async (req,res)=>{
     const users = await User.find().select('-password')
     res.status(200).send(users)
@@ -46,7 +44,6 @@ router.post('/register', async (req,res)=>{
     
 })
 
-
 router.delete('/:id', [auth,admin], async(req,res) =>{
     const result = await User.findByIdAndRemove(req.params.id).select('-password')
     if(!result) return res.status(400).send('Usuário não encontrado!')
@@ -54,24 +51,34 @@ router.delete('/:id', [auth,admin], async(req,res) =>{
 
 })
 
-
 router.get('/confirm/:token', async(req,res)=>{
     const user =await User.findOneAndUpdate({activeHash :req.params.token},{active: true}).select('-password')
     if(!user) return res.status(400).send('Usuário não encontrado!')
     res.status(200).send(user)
 })
 
-
 router.post('/login',async(req,res)=>{
     const credenciais = req.body
 
-    if(!credenciais.login || !credenciais.password) return res.status(400).send('Error: Enviar Login e password!')
+    if(!credenciais.email || !credenciais.password) return res.status(400).send('Error: Enviar Login e password!')
 
-    //Continuar com Login
+    const user = await User.findOne({email: credenciais.email})
 
+    if(!user) return res.status(404).send('Usuário não cadastrado')
+    if(!user.active) {
+        await sendRegisterEmail(credenciais.email,user.activeHash) 
+        return res.status(401).send(`Usuário não está ativo. Email de ativação reenviado para ${credenciais.email}`)
+    }
+
+    
+    const isValidPassword = await bcrypt.compare(credenciais.password, user.password)
+
+    if(!isValidPassword) return res.status(401).send('Password invalid')
+    
 
     const token = user.generateJwt()
-    res.header('x-auth-token', token).send(_.pick(user,['_id', 'name', 'email']))
+    res.header('x-auth-token', token).send(_.pick(user,['_id', 'name', 'email','isAdmin'])).status(200)
+
 })
 
 module.exports = router
