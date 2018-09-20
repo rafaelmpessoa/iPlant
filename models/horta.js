@@ -1,4 +1,6 @@
 const mongoose = require('mongoose')
+const Joi = require('joi')
+Joi.objectId  = require('joi-objectid')(Joi)
 
 const hortaSchema = new mongoose.Schema({
     user:{
@@ -19,6 +21,29 @@ const hortaSchema = new mongoose.Schema({
     })
 
 
+function validateHorta(horta) {
+    const schema = {
+        user: Joi.objectId().required(),
+        plant: Joi.array().items(Joi.objectId())
+    }
 
-module.exports = mongoose.model('Horta' , hortaSchema)
+    return Joi.validate(horta,schema)
+}
+
+function validateAddPlant(horta) {
+    const schema = {
+        _id: Joi.objectId().required(),
+        plant: Joi.array().items(Joi.objectId().required()).required()
+    }
+
+    return Joi.validate(horta,schema)
+}
+
+
+module.exports = {
+    Horta: mongoose.model('Horta' , hortaSchema),
+    validate: validateHorta,
+    validateAddPlant: validateAddPlant
+}    
+
 

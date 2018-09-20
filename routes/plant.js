@@ -45,4 +45,15 @@ router.put('/:id', [auth, admin], async (req, res) => {
     res.status(200).send(plant)
 })
 
+//deletar planta
+router.delete('/:id', [auth,admin], async (req,res)=>{
+    let plant
+    try{
+        plant = await Plant.findByIdAndRemove(req.params.id)
+        res.status(200).send(plant)
+    }catch(e){
+        res.status(400).send('é necesário passar um objectId como parâmetro')
+    }
+})
+
 module.exports = router
