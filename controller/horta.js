@@ -1,6 +1,6 @@
 const {Horta, validate, validateAddPlant} = require('../models/horta')
 const {Plant} = require('../models/plant')
-//const {p_filter} = require('p-iteration')
+const {p_filter} = require('p-iteration')
 
 
 //obter todas as hortas

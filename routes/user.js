@@ -1,84 +1,22 @@
 const express = require('express')
 const router = express.Router()
-const {User, validate} = require('../models/user')
-const _ = require('lodash')
-const bcrypt = require('bcrypt')
 const auth = require('../middleware/auth')
 const admin = require('../middleware/admin')
-const sendRegisterEmail = require('../email')
-const uid = require('rand-token').uid; 
+const user_controller = require('../controller/user')
 
 
-router.get('/:id', auth , async (req,res)=>{
-    const user = await User.findById(req.params.id).select('-password')
-    res.status(200).send(user)
-})
+//Obter usuário
+router.get('/:id', auth , user_controller.getOneUser)
 
-router.get('/', [auth,admin], async (req,res)=>{
-    const users = await User.find().select('-password')
-    res.status(200).send(users)
-})
+router.get('/', [auth,admin], user_controller.allUser)
 
 // Criar um usuário inativo.
-router.post('/register', async (req,res)=>{
-    const { error } = validate(req.body)
-    if (error) return res.send(400).send(error.details[0].message)
+router.post('/register', user_controller.postUser)
 
-    let user = await User.findOne({ email: req.body.email})
-    if (user) return res.status(400).send('Usuário já existe!')
+router.delete('/:id', [auth,admin], user_controller.deleteUSer)
 
-    user = new User(_.pick(req.body,['name','password','email','isAdmin']))
-    const salt = await bcrypt.genSalt(10)
-    user.password = await bcrypt.hash(user.password,salt)
-    const token = uid(16)
-    user.activeHash = token
-    
-    try{
-        await user.save()
-        await sendRegisterEmail(user.email,token)
-        res.status(200).send(user)
-    }catch(e){
-        console.log(e.message)
-        res.status(400).send(`Falha: ${e.message}`)
-    }  
-    
-})
+router.get('/confirm/:token', user_controller.validateToken)
 
-router.delete('/:id', [auth,admin], async(req,res) =>{
-    const result = await User.findByIdAndRemove(req.params.id).select('-password')
-    if(!result) return res.status(400).send('Usuário não encontrado!')
-    res.status(200).send(result)
-
-})
-
-router.get('/confirm/:token', async(req,res)=>{
-    const user =await User.findOneAndUpdate({activeHash :req.params.token},{active: true}).select('-password')
-    if(!user) return res.status(400).send('Usuário não encontrado!')
-    res.status(200).send(user)
-})
-
-router.post('/login',async(req,res)=>{
-    const credenciais = req.body
-
-    if(!credenciais.email || !credenciais.password) return res.status(400).send('Error: Enviar Login e password!')
-
-    const user = await User.findOne({email: credenciais.email})
-
-    if(!user) return res.status(404).send('Usuário não cadastrado')
-    if(!user.active) {
-        await sendRegisterEmail(credenciais.email,user.activeHash) 
-        return res.status(401).send(`Usuário não está ativo. Email de ativação reenviado para ${credenciais.email}`)
-    }
-
-    
-    const isValidPassword = await bcrypt.compare(credenciais.password, user.password)
-
-    if(!isValidPassword) return res.status(401).send('Password invalid')
-    
-
-    const token = user.generateJwt()
-    res.header('x-auth-token', token).send(_.pick(user,['_id', 'name', 'email','isAdmin'])).status(200)
-
-})
+router.post('/login',user_controller.login)
 
 module.exports = router

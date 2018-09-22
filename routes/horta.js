@@ -19,7 +19,7 @@ router.get('/:id', [auth,admin], horta_controller.deleteOneHorta)
 //add uma planta na horta
 router.put('/plant/add/',auth,horta_controller.addPlant)
 
-//add uma planta na horta
+//remover uma planta na horta
 router.put('/plant/remove/',auth,horta_controller.removePlant)
 
 
