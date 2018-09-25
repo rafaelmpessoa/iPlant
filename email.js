@@ -2,10 +2,13 @@ const nodemailer = require('nodemailer')
 const config = require('config')
 const clientSecret = config.get('oauth2.clientSecret') || false
 const confirmUrl = 'http://localhost:3000/api/users/confirm/'
+const logger = require('./logger')
 
 let active = !!clientSecret
 
-if (!active) console.log("é necessário definir clientSecret")
+if (!active) logger.warn("EMAIL - é necessário definir clientSecret")
+     
+
 
 const transporter = nodemailer.createTransport({
     service: 'gmail',
@@ -41,7 +44,7 @@ module.exports = function sendRegisterEmail(to,token) {
 
     transporter.sendMail(mailOptions, function (err, info) {
         if (err)
-            console.log(err.message)
+            logger.warn(`EMAIL - Error: ${err.message}`)
         else
             console.log('Email enviado para: ',info.accepted);
     });

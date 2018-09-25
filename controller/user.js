@@ -3,6 +3,7 @@ const sendRegisterEmail = require('../email')
 const uid = require('rand-token').uid; 
 const _ = require('lodash')
 const bcrypt = require('bcrypt')
+const logger = require('../logger')
 
 
 
@@ -43,7 +44,7 @@ exports.postUser = async (req,res)=>{
         await sendRegisterEmail(user.email,token)
         res.status(200).send(user)
     }catch(e){
-        console.log(e.message)
+        logger.error(`USER - Post: ${e.message}`)
         res.status(400).send(`Falha: ${e.message}`)
     }  
     
