@@ -1,4 +1,4 @@
-const logger = require('../logger')
+const logger = require('../startup/logging')
 
 module.exports = function (req, res, next) { 
     if (!req.user.isAdmin) {

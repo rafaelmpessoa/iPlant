@@ -1,10 +1,8 @@
 const {User,validate} = require('../models/user')
-const sendRegisterEmail = require('../email')
+const sendRegisterEmail = require('../startup/email')
 const uid = require('rand-token').uid; 
 const _ = require('lodash')
 const bcrypt = require('bcrypt')
-const logger = require('../logger')
-
 
 
 exports.getOneUser = async (req,res) => {
@@ -39,14 +37,10 @@ exports.postUser = async (req,res)=>{
     const token = uid(16)
     user.activeHash = token
     
-    try{
-        await user.save()
-        await sendRegisterEmail(user.email,token)
-        res.status(200).send(user)
-    }catch(e){
-        logger.error(`USER - Post: ${e.message}`)
-        res.status(400).send(`Falha: ${e.message}`)
-    }  
+    await user.save()
+    await sendRegisterEmail(user.email,token)
+    res.status(200).send(user)
+
     
 }
 

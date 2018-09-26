@@ -1,22 +1,12 @@
-const server = require('./server')
-const db = require('./db')
-const config = require('config')
-const logger = require('./logger')
-require('express-async-errors')
+const logger = require('./startup/logging');
+const express = require('express');
+const app = express();
 
-if(!config.get('jwToken')){
-    logger.error('FATAL ERRO: iplant_privateKey is not defined!')
-    process.exit(1)
-}
-
-server() // Iniciar o servidor
+//require('./startup/logging');
+require('./startup/routes')(app);
+require('./startup/db')();
+require('./startup/config')();
 
 
-async function connectDB(){
-    await db()
-    
-} 
-
-
-
-connectDB()
+const port = process.env.PORT || 3000;
+app.listen(port, () => logger.info(`Listening on port ${port}...`));

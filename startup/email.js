@@ -2,7 +2,7 @@ const nodemailer = require('nodemailer')
 const config = require('config')
 const clientSecret = config.get('oauth2.clientSecret') || false
 const confirmUrl = 'http://localhost:3000/api/users/confirm/'
-const logger = require('./logger')
+const logger = require('./logging');
 
 let active = !!clientSecret
 
@@ -44,9 +44,9 @@ module.exports = function sendRegisterEmail(to,token) {
 
     transporter.sendMail(mailOptions, function (err, info) {
         if (err)
-            logger.warn(`EMAIL - Error: ${err.message}`)
+            logger.error(`EMAIL - Error: ${err.message}`)
         else
-            console.log('Email enviado para: ',info.accepted);
+            logger.info(`Email enviado para: ${info.accepted}`);
     });
 }
 
