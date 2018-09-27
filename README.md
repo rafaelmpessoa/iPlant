@@ -12,14 +12,22 @@ You need node installed.
 ### Installing
 
 You need set some enviroment variable:
+
+
 Database variable:
+
 DB_USERNAME
+
 DB_PASSWORD
 
+
 to send email:
+
 clientSecrety - oAuth2 Gmail
 
+
 JWT:
-iplat_privateKey
+
+iplant_privateKey
 
 
