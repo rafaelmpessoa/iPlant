@@ -13,7 +13,7 @@ const myFormat = winston.format.printf(info => {
 
 const logger = winston.createLogger({
   format: winston.format.combine(
-    winston.format.timestamp({ format: 'DD-MM-YYYY HH:mm:ss'}),
+    winston.format.timestamp({ format: 'DD-MM-YYYY HH:mm:ss' }),
     myFormat
   ),
   transports: [
@@ -21,8 +21,12 @@ const logger = winston.createLogger({
     // - Write to all logs with level `info` and below to `combined.log` 
     // - Write all logs error (and below) to `error.log`.
     //
-    new winston.transports.File({filename: 'logfile.log'}),
-    new winston.transports.MongoDB({ db: URI, level: 'warn' }),
+    new winston.transports.File({ filename: 'logfile.log', handleExceptions:true}),
+    new winston.transports.MongoDB(
+      {
+        db: URI,
+        level: "warn"
+      }),
     new winston.transports.Console()
   ]
   ,
@@ -32,7 +36,13 @@ const logger = winston.createLogger({
 });
 
 process.on('unhandledRejection', (ex) => {
-  throw ex;
+  logger.error(ex);
+ // process.exit(1)
+});
+
+process.on('uncaughtException', (ex) => {
+  logger.error(ex);
+  //process.exit(1)
 });
 
 if (process.env.NODE_ENV !== 'production') {
