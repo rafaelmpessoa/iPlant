@@ -5,7 +5,10 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "set iplant_privateKey=123456 && set DB_USERNAME=rafael&& set DB_PASSWORD=rafa1103&& set clientSecret=2oqca1woDIZS1LvHndst5Art&& nodemon index.js"
+    "start": "node index.js"
+  },
+  "engines": {
+    "node": "10.11.0"
   },
   "repository": {
     "type": "git",
